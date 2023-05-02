@@ -7,22 +7,22 @@ package:
   version: {{ version }}
 
 source:
-  
-  fn: {{ name }}-{{ version }}.tar.gz
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  sha256: 3fbfffe4e0ca348722bacdc46dbd1e7a64205842a937dfc05ef31815abae292d
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
-  noarch: python
+  skip: true  # [py<36]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed -vvv
 
 requirements:
-  build:
-    - python >=3.8
+  host:
+    - python
     - pip
+    - setuptools
+    - wheel
   run:
-    - python >=3.8
+    - python
     - xlwt
     - xlrd
     - xlsxwriter
@@ -32,12 +32,14 @@ requirements:
     - attrs >=19.2.0
     - click
     - six
-    - typing
 
 test:
   imports:
     - canmatrix
-    
+  commands:
+    - pip check
+  requires:
+    - pip
 
 about:
   home: https://github.com/ebroecker/canmatrix
@@ -73,7 +75,7 @@ about:
         .sym
         .xml fibex
 
-  doc_url: 
+  doc_url: https://canmatrix.readthedocs.io/en/latest/
   dev_url: https://github.com/ebroecker/canmatrix
 
 extra:
